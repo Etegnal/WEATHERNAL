@@ -163,13 +163,16 @@ body.dark-mode {
 
 .main-content {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     min-height: 70vh;
     padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
     gap: 30px;
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
 }
 
 .weather-container {
@@ -183,7 +186,6 @@ body.dark-mode {
     width: 100%;
     text-align: center;
     color: #fff;
-    margin-left: 20px;
 }
 
 .weather-header h2 {
@@ -431,15 +433,24 @@ body.dark-mode {
     font-size: 40px;
 }
 
+/* Forecast Section */
+.forecast-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex: 1;
+    max-width: 800px;
+}
+
 /* Forecast Styles */
 .forecast-container {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     border-radius: 30px;
-    padding: 30px;
+    padding: 25px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    max-width: 600px;
+    max-width: 550px;
     width: 100%;
     color: #fff;
     height: fit-content;
@@ -497,7 +508,70 @@ body.dark-mode {
 .forecast-day-name {
     font-size: 12px;
     opacity: 0.8;
-    text-transform: capitalize;
+}
+
+/* Major Cities Weather Styles */
+.cities-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    max-width: 130px;
+    width: 100%;
+    margin-top: 0;
+}
+
+.city-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.city-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.city-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.city-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+.city-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.city-icon img {
+    width: 35px;
+    height: 35px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.city-temp {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .forecast-weather {
@@ -660,6 +734,15 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
     border-radius: 15px;
 }
 @media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .main-content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
     .header {
         flex-direction: column;
         gap: 20px;
@@ -687,6 +770,12 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
         justify-content: center;
         padding-top: 10px;
         gap: 20px;
+    }
+    
+    .forecast-section {
+        flex-direction: column;
+        gap: 15px;
+        max-width: none;
     }
     
     .weather-container {
@@ -749,6 +838,11 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
         padding: 10px;
     }
     
+    .main-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
     .weather-container {
         padding: 20px 15px;
         max-width: 350px;
@@ -795,5 +889,30 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
     
     .weather-header h2 {
         font-size: 20px;
+    }
+    
+    .cities-grid {
+        flex-direction: column;
+        gap: 8px;
+        max-width: 120px;
+        margin-top: 20px;
+    }
+    
+    .city-item {
+        min-width: auto;
+        padding: 12px 8px;
+    }
+    
+    .city-icon img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .city-name {
+        font-size: 11px;
+    }
+    
+    .city-temp {
+        font-size: 12px;
     }
 }

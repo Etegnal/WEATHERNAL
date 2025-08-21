@@ -40,6 +40,13 @@ const forecastGrid = document.getElementById('forecastGrid');
 const hourlyChart = document.getElementById('hourlyChart');
 const temperatureChart = document.getElementById('temperatureChart');
 
+// Major cities elements
+const citiesContainer = document.getElementById('citiesContainer');
+const citiesGrid = document.getElementById('citiesGrid');
+
+// Major cities list
+const majorCities = ['Roma', 'İstanbul', 'Paris', 'London'];
+
 // Autocomplete elements
 let suggestionsContainer = null;
 let searchTimeout = null;
@@ -67,6 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
         getWeatherData(localStorage.getItem('lastCity'));
     }
     
+    // Load major cities weather
+    loadMajorCitiesWeather();
+    
     // Update chart every minute to keep current hour updated
     setInterval(() => {
         updateCurrentDate();
@@ -93,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Auto-refreshing weather data for:', lastCity);
             getWeatherData(lastCity);
         }
+        // Also refresh major cities weather
+        loadMajorCitiesWeather();
     }, 1800000); // Refresh every 30 minutes
 });
 
@@ -795,6 +807,9 @@ function toggleTempUnit() {
             getWeatherData(lastCity);
         }
     }
+    
+    // Refresh major cities weather with new temperature unit
+    loadMajorCitiesWeather();
 }
 
 function updateTempUnit() {
@@ -833,4 +848,95 @@ function showError(message) {
 
 function hideError() {
     error.style.display = 'none';
+}
+
+// Major cities weather functions
+async function loadMajorCitiesWeather() {
+    try {
+        // Clear existing cities
+        citiesGrid.innerHTML = '';
+        
+        // Load weather for each major city
+        for (const city of majorCities) {
+            await loadCityWeather(city);
+        }
+    } catch (error) {
+        console.error('Error loading major cities weather:', error);
+    }
+}
+
+async function loadCityWeather(cityName) {
+    try {
+        const response = await fetch(`${BASE_URL}?q=${cityName}&appid=${API_KEY}&units=metric&lang=tr`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        displayCityWeather(data);
+    } catch (error) {
+        console.error(`Error loading weather for ${cityName}:`, error);
+        // Display error state for this city
+        displayCityError(cityName);
+    }
+}
+
+function displayCityWeather(data) {
+    const cityItem = document.createElement('div');
+    cityItem.className = 'city-item';
+    
+    const cityInfo = document.createElement('div');
+    cityInfo.className = 'city-info';
+    
+    const cityName = document.createElement('div');
+    cityName.className = 'city-name';
+    cityName.textContent = data.name;
+    
+    const cityIcon = document.createElement('div');
+    cityIcon.className = 'city-icon';
+    
+    const iconImg = document.createElement('img');
+    iconImg.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    iconImg.alt = data.weather[0].description;
+    
+    cityIcon.appendChild(iconImg);
+    
+    const cityTemp = document.createElement('div');
+    cityTemp.className = 'city-temp';
+    cityTemp.textContent = formatTemperature(data.main.temp);
+    
+    cityInfo.appendChild(cityName);
+    cityInfo.appendChild(cityIcon);
+    cityInfo.appendChild(cityTemp);
+    cityItem.appendChild(cityInfo);
+    
+    citiesGrid.appendChild(cityItem);
+}
+
+function displayCityError(cityName) {
+    const cityItem = document.createElement('div');
+    cityItem.className = 'city-item';
+    
+    const cityInfo = document.createElement('div');
+    cityInfo.className = 'city-info';
+    
+    const cityNameElement = document.createElement('div');
+    cityNameElement.className = 'city-name';
+    cityNameElement.textContent = cityName;
+    
+    const cityIcon = document.createElement('div');
+    cityIcon.className = 'city-icon';
+    cityIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 24px; color: #ff6b6b;"></i>';
+    
+    const cityTemp = document.createElement('div');
+    cityTemp.className = 'city-temp';
+    cityTemp.textContent = '--';
+    
+    cityInfo.appendChild(cityNameElement);
+    cityInfo.appendChild(cityIcon);
+    cityInfo.appendChild(cityTemp);
+    cityItem.appendChild(cityInfo);
+    
+    citiesGrid.appendChild(cityItem);
 }
