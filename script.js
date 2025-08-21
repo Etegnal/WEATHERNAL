@@ -338,7 +338,7 @@ async function getWeatherData(city) {
         // Get coordinates first for air quality data
         const coords = await getCoordinates(city);
         if (!coords) {
-            throw new Error('Şehir bulunamadı');
+            throw new Error(t('cityNotFound'));
         }
         
         // Get current weather, forecast, and air quality data
@@ -351,7 +351,7 @@ async function getWeatherData(city) {
         
         if (!currentResponse.ok || !forecastResponse.ok || !airQualityResponse.ok) {
             console.error('Weather API Error:', currentResponse.status, forecastResponse.status, airQualityResponse.status);
-            throw new Error('Şehir bulunamadı veya API hatası');
+            throw new Error(t('apiError'));
         }
         
         const [currentData, forecastData, airQualityData] = await Promise.all([
@@ -383,6 +383,11 @@ function displayWeatherData(data) {
     // Update city name and date
     cityName.textContent = data.name;
     updateCurrentDate();
+    
+    // Update default city name if it's the default selection
+    if (data.name === 'Konya' && !localStorage.getItem('lastCity')) {
+        cityName.textContent = isEnglish ? 'Konya' : 'Konya';
+    }
     
     // Update temperature and description
     temperature.textContent = isFahrenheit ? celsiusToFahrenheit(data.main.temp) : Math.round(data.main.temp);
@@ -917,6 +922,34 @@ function updateLanguage() {
     
     // Update UI text elements
     updateUIText();
+}
+
+function updateUIText() {
+    // Update search placeholder
+    searchInput.placeholder = t('searchPlaceholder');
+    
+    // Update loading text
+    const loadingText = document.querySelector('.loading p');
+    if (loadingText) {
+        loadingText.textContent = t('loading');
+    }
+    
+    // Update error text
+    const errorText = document.querySelector('.error p');
+    if (errorText) {
+        errorText.textContent = t('error');
+    }
+    
+    // Update forecast headers
+    const forecastHeader = document.querySelector('.forecast-header h3');
+    if (forecastHeader) {
+        forecastHeader.textContent = t('forecast5Day');
+    }
+    
+    const hourlyHeader = document.querySelector('.chart-header h4');
+    if (hourlyHeader) {
+        hourlyHeader.textContent = t('hourlyForecast');
+    }
 }
 
 // Loading states
