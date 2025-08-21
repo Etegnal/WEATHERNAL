@@ -10,6 +10,7 @@ const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const themeToggle = document.getElementById('themeToggle');
 const tempUnitToggle = document.getElementById('tempUnitToggle');
+const languageToggle = document.getElementById('languageToggle');
 const weatherContainer = document.getElementById('weatherContainer');   
 const loading = document.getElementById('loading');
 const error = document.getElementById('error');
@@ -47,6 +48,54 @@ const citiesGrid = document.getElementById('citiesGrid');
 // Major cities list
 const majorCities = ['Roma', 'İstanbul', 'Paris', 'London'];
 
+// Translation object
+const translations = {
+    tr: {
+        searchPlaceholder: 'Şehir ara...',
+        citySelect: 'Şehir Seçin',
+        weatherInfo: 'Hava durumu bilgisi',
+        feelsLike: 'Hissedilen',
+        wind: 'Rüzgar',
+        humidity: 'Nem',
+        visibility: 'Görüş',
+        airQuality: 'Hava Kalitesi',
+        uvIndex: 'UV İndeksi',
+        daylightHours: 'Gündüz saatleri',
+        loading: 'Hava durumu bilgileri yükleniyor...',
+        error: 'Bir hata oluştu',
+        cityNotFound: 'Şehir bulunamadı',
+        apiError: 'Şehir bulunamadı veya API hatası',
+        forecast5Day: '5 Günlük Tahmin',
+        hourlyForecast: 'Saatlik Tahmin',
+        km: 'km',
+        kmh: 'km/h',
+        hours: 'sa',
+        minutes: 'dk'
+    },
+    en: {
+        searchPlaceholder: 'Search city...',
+        citySelect: 'Select City',
+        weatherInfo: 'Weather information',
+        feelsLike: 'Feels Like',
+        wind: 'Wind',
+        humidity: 'Humidity',
+        visibility: 'Visibility',
+        airQuality: 'Air Quality',
+        uvIndex: 'UV Index',
+        daylightHours: 'Daylight hours',
+        loading: 'Loading weather information...',
+        error: 'An error occurred',
+        cityNotFound: 'City not found',
+        apiError: 'City not found or API error',
+        forecast5Day: '5-Day Forecast',
+        hourlyForecast: 'Hourly Forecast',
+        km: 'km',
+        kmh: 'km/h',
+        hours: 'h',
+        minutes: 'min'
+    }
+};
+
 // Autocomplete elements
 let suggestionsContainer = null;
 let searchTimeout = null;
@@ -60,11 +109,15 @@ let isDarkMode = localStorage.getItem('darkMode') === 'true';
 // Temperature unit management
 let isFahrenheit = localStorage.getItem('tempUnit') === 'fahrenheit';
 
+// Language management
+let isEnglish = localStorage.getItem('language') === 'english';
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     createSuggestionsContainer();
     updateTheme();
     updateTempUnit();
+    updateLanguage();
     updateCurrentDate();
     
     // Set default city (Konya)
@@ -140,6 +193,7 @@ document.addEventListener('click', (e) => {
 
 themeToggle.addEventListener('click', toggleTheme);
 tempUnitToggle.addEventListener('click', toggleTempUnit);
+languageToggle.addEventListener('click', toggleLanguage);
 
 // Handle search input for autocomplete
 function handleSearchInput() {
@@ -288,9 +342,10 @@ async function getWeatherData(city) {
         }
         
         // Get current weather, forecast, and air quality data
+        const lang = isEnglish ? 'en' : 'tr';
         const [currentResponse, forecastResponse, airQualityResponse] = await Promise.all([
-            fetch(`${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=tr`),
-            fetch(`${FORECAST_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=tr`),
+            fetch(`${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=${lang}`),
+            fetch(`${FORECAST_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=${lang}`),
             fetch(`${AIR_QUALITY_URL}?lat=${coords.lat}&lon=${coords.lon}&appid=${API_KEY}`)
         ]);
         
@@ -824,6 +879,46 @@ function updateTempUnit() {
     }
 }
 
+// Translation helper function
+function t(key) {
+    const lang = isEnglish ? 'en' : 'tr';
+    return translations[lang][key] || key;
+}
+
+// Language management
+function toggleLanguage() {
+    isEnglish = !isEnglish;
+    localStorage.setItem('language', isEnglish ? 'english' : 'turkish');
+    updateLanguage();
+    
+    // Refresh display with new language
+    if (currentForecastData) {
+        // Re-display data with new language
+        const lastCity = localStorage.getItem('lastCity');
+        if (lastCity) {
+            getWeatherData(lastCity);
+        }
+    }
+    
+    // Refresh major cities weather with new language
+    loadMajorCitiesWeather();
+}
+
+function updateLanguage() {
+    const languageBtn = languageToggle.querySelector('span');
+    
+    if (isEnglish) {
+        languageBtn.textContent = 'EN';
+        languageToggle.classList.add('english');
+    } else {
+        languageBtn.textContent = 'TR';
+        languageToggle.classList.remove('english');
+    }
+    
+    // Update UI text elements
+    updateUIText();
+}
+
 // Loading states
 function showLoading() {
     loading.style.display = 'flex';
@@ -867,7 +962,8 @@ async function loadMajorCitiesWeather() {
 
 async function loadCityWeather(cityName) {
     try {
-        const response = await fetch(`${BASE_URL}?q=${cityName}&appid=${API_KEY}&units=metric&lang=tr`);
+        const lang = isEnglish ? 'en' : 'tr';
+        const response = await fetch(`${BASE_URL}?q=${cityName}&appid=${API_KEY}&units=metric&lang=${lang}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
