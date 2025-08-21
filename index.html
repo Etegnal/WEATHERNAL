@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weathernal - Hava Durumu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <img src="LOGOERENBEYAZ.png" alt="Weathernal Logo" class="logo">
+                <h1 class="company-name">WEATHERNAL</h1>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Şehir ara..." class="search-input">
+                    <button id="searchBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="controls-section">
+                <div class="temp-unit-toggle">
+                    <button id="tempUnitToggle" class="temp-unit-btn">
+                        <span>°C</span>
+                    </button>
+                </div>
+                <div class="theme-toggle">
+                    <button id="themeToggle" class="theme-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Weather Display -->
+            <div class="weather-container" id="weatherContainer">
+                <div class="weather-card">
+                    <div class="weather-header">
+                        <h2 id="cityName">Şehir Seçin</h2>
+                        <p id="currentDate"></p>
+                    </div>
+                    
+                    <div class="weather-main">
+                        <div class="temperature-section">
+                            <div class="current-temp">
+                                <span id="temperature">--</span><span id="tempUnit">°C</span>
+                            </div>
+                            <div class="weather-description" id="weatherDescription">
+                                Hava durumu bilgisi
+                            </div>
+                        </div>
+                        
+                        <div class="weather-icon">
+                            <img id="weatherIcon" src="" alt="Hava durumu ikonu">
+                        </div>
+                    </div>
+                    
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-thermometer-half"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Hissedilen</span>
+                                <span class="detail-value" id="feelsLike">--°C</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Rüzgar</span>
+                                <span class="detail-value" id="windSpeed">-- km/h</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <i class="fas fa-tint"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Nem</span>
+                                <span class="detail-value" id="humidity">--%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <i class="fas fa-eye"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Görüş</span>
+                                <span class="detail-value" id="visibility">-- km</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                                         <!-- Air Quality and UV Index -->
+                     <div class="air-quality-section">
+                         <div class="air-quality-item">
+                             <i class="fas fa-smog"></i>
+                             <div class="detail-info">
+                                 <span class="detail-label">Hava Kalitesi</span>
+                                 <span class="detail-value" id="airQuality">--</span>
+                             </div>
+                         </div>
+                         
+                         <div class="air-quality-item">
+                             <i class="fas fa-sun"></i>
+                             <div class="detail-info">
+                                 <span class="detail-label">UV İndeksi</span>
+                                 <span class="detail-value" id="uvIndex">--</span>
+                             </div>
+                         </div>
+                     </div>
+                     
+                                         <div class="sun-info">
+                        <div class="sun-path">
+                            <div class="sun-curve">
+                                <div class="sun-peak"></div>
+                            </div>
+                            <div class="sun-times">
+                                <div class="sunrise-info">
+                                    <i class="fas fa-sunrise"></i>
+                                    <span id="sunrise">--:--</span>
+                                </div>
+                                <div class="sunset-info">
+                                    <i class="fas fa-sunset"></i>
+                                    <span id="sunset">--:--</span>
+                                </div>
+                            </div>
+                            <div class="daylight-info">
+                                <div class="daylight-label">Gündüz saatleri</div>
+                                <div class="daylight-duration" id="daylightDuration">-- sa -- dk</div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+             
+             <!-- 5-Day Forecast -->
+             <div class="forecast-container" id="forecastContainer">
+                 <div class="forecast-header">
+                     <h3>5 Günlük Tahmin</h3>
+                 </div>
+                 <div class="forecast-grid" id="forecastGrid">
+                     <!-- Forecast items will be added here by JavaScript -->
+                 </div>
+                 
+                 <!-- Hourly Temperature Chart -->
+                 <div class="hourly-chart" id="hourlyChart">
+                     <div class="chart-header">
+                         <h4>Saatlik Tahmin</h4>
+                     </div>
+                     <div class="chart-container">
+                         <canvas id="temperatureChart" width="480" height="150"></canvas>
+                     </div>
+                 </div>
+             </div>
+            
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Hava durumu bilgileri yükleniyor...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div class="error" id="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="errorMessage">Bir hata oluştu</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
