@@ -70,7 +70,20 @@ const translations = {
         km: 'km',
         kmh: 'km/h',
         hours: 'sa',
-        minutes: 'dk'
+        minutes: 'dk',
+        // Air Quality levels
+        aqiGood: 'İyi',
+        aqiModerate: 'Orta',
+        aqiPoor: 'Kötü',
+        aqiVeryPoor: 'Çok Kötü',
+        aqiDangerous: 'Tehlikeli',
+        aqiUnknown: 'Bilinmiyor',
+        // UV Index levels
+        uvLow: 'düşük',
+        uvModerate: 'orta',
+        uvHigh: 'yüksek',
+        uvVeryHigh: 'çok yüksek',
+        uvExtreme: 'aşırı'
     },
     en: {
         searchPlaceholder: 'Search city...',
@@ -92,7 +105,20 @@ const translations = {
         km: 'km',
         kmh: 'km/h',
         hours: 'h',
-        minutes: 'min'
+        minutes: 'min',
+        // Air Quality levels
+        aqiGood: 'Good',
+        aqiModerate: 'Moderate',
+        aqiPoor: 'Poor',
+        aqiVeryPoor: 'Very Poor',
+        aqiDangerous: 'Dangerous',
+        aqiUnknown: 'Unknown',
+        // UV Index levels
+        uvLow: 'low',
+        uvModerate: 'moderate',
+        uvHigh: 'high',
+        uvVeryHigh: 'very high',
+        uvExtreme: 'extreme'
     }
 };
 
@@ -409,14 +435,17 @@ function displayWeatherData(data) {
     const sunriseTime = new Date(data.sys.sunrise * 1000);
     const sunsetTime = new Date(data.sys.sunset * 1000);
     
-    sunrise.textContent = sunriseTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-    sunset.textContent = sunsetTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    const locale = isEnglish ? 'en-US' : 'tr-TR';
+    sunrise.textContent = sunriseTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+    sunset.textContent = sunsetTime.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
     
     // Calculate and display daylight duration
     const daylightMs = sunsetTime - sunriseTime;
     const daylightHours = Math.floor(daylightMs / (1000 * 60 * 60));
     const daylightMinutes = Math.floor((daylightMs % (1000 * 60 * 60)) / (1000 * 60));
-    daylightDuration.textContent = `${daylightHours} sa ${daylightMinutes} dk`;
+    const hoursText = isEnglish ? 'h' : 'sa';
+    const minutesText = isEnglish ? 'min' : 'dk';
+    daylightDuration.textContent = `${daylightHours} ${hoursText} ${daylightMinutes} ${minutesText}`;
     
     // Update sun position based on current time
     updateSunPosition(sunriseTime, sunsetTime);
@@ -443,22 +472,22 @@ function displayAirQualityData(data) {
 // Get Air Quality Index text
 function getAQIText(aqi) {
     const aqiLevels = {
-        1: 'İyi',
-        2: 'Orta',
-        3: 'Kötü',
-        4: 'Çok Kötü',
-        5: 'Tehlikeli'
+        1: t('aqiGood'),
+        2: t('aqiModerate'),
+        3: t('aqiPoor'),
+        4: t('aqiVeryPoor'),
+        5: t('aqiDangerous')
     };
-    return aqiLevels[aqi] || 'Bilinmiyor';
+    return aqiLevels[aqi] || t('aqiUnknown');
 }
 
 // Get UV Index text
 function getUVText(uvValue) {
-    if (uvValue <= 2) return 'düşük';
-    if (uvValue <= 5) return 'orta';
-    if (uvValue <= 7) return 'yüksek';
-    if (uvValue <= 10) return 'çok yüksek';
-    return 'aşırı';
+    if (uvValue <= 2) return t('uvLow');
+    if (uvValue <= 5) return t('uvModerate');
+    if (uvValue <= 7) return t('uvHigh');
+    if (uvValue <= 10) return t('uvVeryHigh');
+    return t('uvExtreme');
 }
 
 // Calculate UV Index (more accurate calculation)
@@ -824,13 +853,14 @@ function updateSunPosition(sunriseTime, sunsetTime) {
 // Update current date
 function updateCurrentDate() {
     const now = new Date();
+    const locale = isEnglish ? 'en-US' : 'tr-TR';
     const options = {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     };
-    currentDate.textContent = now.toLocaleDateString('tr-TR', options);
+    currentDate.textContent = now.toLocaleDateString(locale, options);
 }
 
 // Theme management
@@ -907,6 +937,36 @@ function toggleLanguage() {
     
     // Refresh major cities weather with new language
     loadMajorCitiesWeather();
+    
+    // Update air quality and UV index text if data exists
+    const airQualityElement = document.getElementById('airQuality');
+    const uvIndexElement = document.getElementById('uvIndex');
+    
+    if (airQualityElement && airQualityElement.textContent !== '--') {
+        // Re-parse the AQI value and update text
+        const aqiValue = airQualityElement.textContent;
+        if (aqiValue.includes('İyi') || aqiValue.includes('Good')) {
+            airQualityElement.textContent = t('aqiGood');
+        } else if (aqiValue.includes('Orta') || aqiValue.includes('Moderate')) {
+            airQualityElement.textContent = t('aqiModerate');
+        } else if (aqiValue.includes('Kötü') || aqiValue.includes('Poor')) {
+            airQualityElement.textContent = t('aqiPoor');
+        } else if (aqiValue.includes('Çok Kötü') || aqiValue.includes('Very Poor')) {
+            airQualityElement.textContent = t('aqiVeryPoor');
+        } else if (aqiValue.includes('Tehlikeli') || aqiValue.includes('Dangerous')) {
+            airQualityElement.textContent = t('aqiDangerous');
+        }
+    }
+    
+    if (uvIndexElement && uvIndexElement.textContent !== '--') {
+        // Re-parse the UV value and update text
+        const uvText = uvIndexElement.textContent.split(', ')[1];
+        if (uvText) {
+            const uvValue = uvIndexElement.textContent.split(', ')[0];
+            const newUvText = getUVText(parseInt(uvValue));
+            uvIndexElement.textContent = `${uvValue}, ${newUvText}`;
+        }
+    }
 }
 
 function updateLanguage() {
@@ -950,6 +1010,34 @@ function updateUIText() {
     if (hourlyHeader) {
         hourlyHeader.textContent = t('hourlyForecast');
     }
+    
+    // Update weather detail labels
+    const detailLabels = document.querySelectorAll('.detail-label');
+    detailLabels.forEach(label => {
+        const key = label.textContent.toLowerCase();
+        if (key.includes('hissedilen') || key.includes('feels like')) {
+            label.textContent = t('feelsLike');
+        } else if (key.includes('rüzgar') || key.includes('wind')) {
+            label.textContent = t('wind');
+        } else if (key.includes('nem') || key.includes('humidity')) {
+            label.textContent = t('humidity');
+        } else if (key.includes('görüş') || key.includes('visibility')) {
+            label.textContent = t('visibility');
+        } else if (key.includes('hava kalitesi') || key.includes('air quality')) {
+            label.textContent = t('airQuality');
+        } else if (key.includes('uv indeksi') || key.includes('uv index')) {
+            label.textContent = t('uvIndex');
+        }
+    });
+    
+    // Update daylight label
+    const daylightLabel = document.querySelector('.daylight-label');
+    if (daylightLabel) {
+        daylightLabel.textContent = t('daylightHours');
+    }
+    
+    // Update current date
+    updateCurrentDate();
 }
 
 // Loading states
