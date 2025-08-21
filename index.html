@@ -12,9 +12,11 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="logo-section">
-                <img src="LOGOERENBEYAZ.png" alt="Weathernal Logo" class="logo">
-                <h1 class="company-name">WEATHERNAL</h1>
+            <div class="header-left">
+                <div class="logo-section">
+                    <img src="LOGOERENBEYAZ.png" alt="Weathernal Logo" class="logo">
+                    <h1 class="company-name">WEATHERNAL</h1>
+                </div>
             </div>
             
             <div class="search-section">
@@ -26,21 +28,27 @@
                 </div>
             </div>
             
-            <div class="controls-section">
-                <div class="temp-unit-toggle">
-                    <button id="tempUnitToggle" class="temp-unit-btn">
-                        <span>°C</span>
-                    </button>
-                </div>
-                <div class="language-toggle">
-                    <button id="languageToggle" class="language-btn">
-                        <span>TR</span>
-                    </button>
-                </div>
-                <div class="theme-toggle">
-                    <button id="themeToggle" class="theme-btn">
-                        <i class="fas fa-moon"></i>
-                    </button>
+            <div class="header-right">
+                <button id="hamburgerToggle" class="hamburger-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="controls-section" id="controlsMenu">
+                    <div class="temp-unit-toggle">
+                        <button id="tempUnitToggle" class="temp-unit-btn">
+                            <span>°C</span>
+                        </button>
+                    </div>
+                    <div class="language-toggle">
+                        <button id="languageToggle" class="language-btn">
+                            <span>TR</span>
+                        </button>
+                    </div>
+                    <div class="theme-toggle">
+                        <button id="themeToggle" class="theme-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>

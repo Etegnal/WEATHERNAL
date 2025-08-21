@@ -11,6 +11,8 @@ const searchBtn = document.getElementById('searchBtn');
 const themeToggle = document.getElementById('themeToggle');
 const tempUnitToggle = document.getElementById('tempUnitToggle');
 const languageToggle = document.getElementById('languageToggle');
+const hamburgerToggle = document.getElementById('hamburgerToggle');
+const controlsMenu = document.getElementById('controlsMenu');
 const weatherContainer = document.getElementById('weatherContainer');   
 const loading = document.getElementById('loading');
 const error = document.getElementById('error');
@@ -217,9 +219,40 @@ document.addEventListener('click', (e) => {
     }
 });
 
-themeToggle.addEventListener('click', toggleTheme);
-tempUnitToggle.addEventListener('click', toggleTempUnit);
-languageToggle.addEventListener('click', toggleLanguage);
+themeToggle.addEventListener('click', (e) => {
+    toggleTheme();
+    if (window.innerWidth <= 768) {
+        setTimeout(() => {
+            controlsMenu.classList.remove('show');
+            const icon = hamburgerToggle.querySelector('i');
+            icon.className = 'fas fa-bars';
+        }, 100);
+    }
+});
+
+tempUnitToggle.addEventListener('click', (e) => {
+    toggleTempUnit();
+    if (window.innerWidth <= 768) {
+        setTimeout(() => {
+            controlsMenu.classList.remove('show');
+            const icon = hamburgerToggle.querySelector('i');
+            icon.className = 'fas fa-bars';
+        }, 100);
+    }
+});
+
+languageToggle.addEventListener('click', (e) => {
+    toggleLanguage();
+    if (window.innerWidth <= 768) {
+        setTimeout(() => {
+            controlsMenu.classList.remove('show');
+            const icon = hamburgerToggle.querySelector('i');
+            icon.className = 'fas fa-bars';
+        }, 100);
+    }
+});
+
+hamburgerToggle.addEventListener('click', toggleHamburgerMenu);
 
 // Handle search input for autocomplete
 function handleSearchInput() {
@@ -1039,6 +1072,28 @@ function updateUIText() {
     // Update current date
     updateCurrentDate();
 }
+
+// Hamburger menu functionality
+function toggleHamburgerMenu() {
+    controlsMenu.classList.toggle('show');
+    
+    // Change hamburger icon
+    const icon = hamburgerToggle.querySelector('i');
+    if (controlsMenu.classList.contains('show')) {
+        icon.className = 'fas fa-times';
+    } else {
+        icon.className = 'fas fa-bars';
+    }
+}
+
+// Close hamburger menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.header-right')) {
+        controlsMenu.classList.remove('show');
+        const icon = hamburgerToggle.querySelector('i');
+        icon.className = 'fas fa-bars';
+    }
+});
 
 // Loading states
 function showLoading() {

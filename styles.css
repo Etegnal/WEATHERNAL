@@ -108,6 +108,36 @@ body.dark-mode {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.hamburger-btn {
+    display: none;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 12px;
+    width: 45px;
+    height: 45px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-size: 18px;
+}
+
+.hamburger-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
 .controls-section {
     display: flex;
     align-items: center;
@@ -773,10 +803,59 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
     }
     
     .header {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
         padding: 15px;
         margin-bottom: 20px;
+        min-height: 60px;
+    }
+    
+    .header-left {
+        flex: 0 0 auto;
+    }
+    
+    .search-section {
+        display: block;
+        flex: 1;
+        max-width: 200px;
+        margin: 0 10px;
+    }
+    
+    .header-right {
+        flex: 0 0 auto;
+    }
+    
+    .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .controls-section {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        padding: 15px;
+        gap: 10px;
+        flex-direction: column;
+        min-width: 120px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transform: translateY(-10px);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 10001;
+    }
+    
+    .controls-section.show {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
     }
     
     .logo-section {
@@ -784,46 +863,37 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
     }
     
     .logo {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
     
     .company-name {
-        font-size: 20px;
+        font-size: 16px;
         letter-spacing: 1px;
     }
     
-    .search-section {
-        max-width: 100%;
-        margin: 0;
-    }
-    
     .search-input {
-        padding: 10px 45px 10px 15px;
-        font-size: 14px;
+        padding: 8px 40px 8px 12px;
+        font-size: 13px;
     }
     
     .search-btn {
-        width: 35px;
-        height: 35px;
-        right: 3px;
-    }
-    
-    .controls-section {
-        order: -1;
-        gap: 8px;
-        justify-content: center;
+        width: 30px;
+        height: 30px;
+        right: 2px;
     }
     
     .temp-unit-btn, .language-btn {
-        width: 40px;
+        width: 45px;
         height: 35px;
         font-size: 12px;
+        margin-bottom: 5px;
     }
     
     .theme-btn {
-        width: 40px;
+        width: 45px;
         height: 40px;
+        margin-bottom: 5px;
     }
     
     .weather-container {
@@ -1074,42 +1144,59 @@ body.dark-mode .suggestions-container::-webkit-scrollbar-thumb:hover {
     
     .header {
         padding: 12px;
-        gap: 12px;
+        gap: 8px;
         margin-bottom: 15px;
+        min-height: 55px;
     }
     
     .logo {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .company-name {
-        font-size: 18px;
-    }
-    
-    .search-input {
-        padding: 8px 40px 8px 12px;
-        font-size: 13px;
-    }
-    
-    .search-btn {
         width: 30px;
         height: 30px;
     }
     
+    .company-name {
+        font-size: 14px;
+    }
+    
+    .search-section {
+        max-width: 150px;
+        margin: 0 8px;
+    }
+    
+    .search-input {
+        padding: 6px 35px 6px 10px;
+        font-size: 12px;
+    }
+    
+    .search-btn {
+        width: 28px;
+        height: 28px;
+        right: 1px;
+    }
+    
+    .hamburger-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
     .controls-section {
-        gap: 6px;
+        top: 50px;
+        padding: 12px;
+        min-width: 100px;
     }
     
     .temp-unit-btn, .language-btn {
-        width: 35px;
+        width: 40px;
         height: 30px;
         font-size: 11px;
+        margin-bottom: 3px;
     }
     
     .theme-btn {
-        width: 35px;
+        width: 40px;
         height: 35px;
+        margin-bottom: 3px;
     }
     
     .weather-container {
